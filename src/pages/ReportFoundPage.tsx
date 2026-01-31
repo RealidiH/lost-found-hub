@@ -12,7 +12,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { saveItem, generateId } from '@/lib/storage';
+import { insertItem } from '@/lib/database';
 import { ItemCategory, CATEGORY_LABELS, CATEGORY_EXAMPLES } from '@/types/item';
 
 const formSchema = z.object({
@@ -63,9 +63,7 @@ const ReportFoundPage = () => {
   });
 
   const onSubmit = (data: FormData) => {
-    const now = new Date().toISOString();
-    saveItem({
-      id: generateId(),
+    insertItem({
       type: 'found',
       category: data.category as ItemCategory,
       description: data.description,
@@ -75,8 +73,6 @@ const ReportFoundPage = () => {
       reporterEmail: data.reporterEmail,
       reporterPhone: data.reporterPhone || undefined,
       status: 'pending',
-      createdAt: now,
-      updatedAt: now,
     });
     
     setSubmitted(true);

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getItems } from '@/lib/storage';
+import { searchItems } from '@/lib/database';
 import { ItemCategory, CATEGORY_LABELS, STATUS_LABELS } from '@/types/item';
 import { format } from 'date-fns';
 
@@ -13,23 +13,12 @@ const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   
-  const items = useMemo(() => {
-    return getItems()
-      .filter(item => item.type === 'found' && (item.status === 'held' || item.status === 'pending'))
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }, []);
-
   const filteredItems = useMemo(() => {
-    return items.filter(item => {
-      const matchesSearch = searchQuery === '' || 
-        item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.location.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
-      
-      return matchesSearch && matchesCategory;
-    });
-  }, [items, searchQuery, categoryFilter]);
+    return searchItems(
+      searchQuery, 
+      categoryFilter === 'all' ? undefined : categoryFilter as ItemCategory
+    );
+  }, [searchQuery, categoryFilter]);
 
   return (
     <div className="space-y-6">
@@ -84,7 +73,7 @@ const SearchPage = () => {
               <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No items found</h3>
               <p className="text-muted-foreground">
-                {items.length === 0 
+                {searchQuery === '' && categoryFilter === 'all'
                   ? "There are currently no items in the Lost & Found."
                   : "Try adjusting your search or filters."}
               </p>

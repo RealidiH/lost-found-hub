@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { getItems, saveItem, deleteItem, isAdminLoggedIn, setAdminLoggedIn } from '@/lib/storage';
+import { getAllItems, updateItem, deleteItem as dbDeleteItem, isAdminLoggedIn, setAdminLoggedIn, getStats } from '@/lib/database';
 import { Item, ItemCategory, ItemStatus, CATEGORY_LABELS, STATUS_LABELS } from '@/types/item';
 import { format } from 'date-fns';
 
@@ -35,9 +35,7 @@ const AdminDashboardPage = () => {
   }, [navigate]);
 
   const refreshItems = () => {
-    setItems(getItems().sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    ));
+    setItems(getAllItems());
   };
 
   const filteredItems = useMemo(() => {
@@ -63,8 +61,7 @@ const AdminDashboardPage = () => {
   };
 
   const handleStatusChange = (item: Item, newStatus: ItemStatus) => {
-    const updatedItem = { ...item, status: newStatus, notes: itemNotes || item.notes };
-    saveItem(updatedItem);
+    updateItem(item.id, { status: newStatus, notes: itemNotes || item.notes });
     refreshItems();
     setSelectedItem(null);
     setItemNotes('');
@@ -76,7 +73,7 @@ const AdminDashboardPage = () => {
 
   const handleDelete = (item: Item) => {
     if (confirm('Are you sure you want to delete this item?')) {
-      deleteItem(item.id);
+      dbDeleteItem(item.id);
       refreshItems();
       setSelectedItem(null);
       toast({ title: 'Item deleted', description: 'The item has been removed.' });
@@ -93,12 +90,7 @@ const AdminDashboardPage = () => {
     }
   };
 
-  const stats = useMemo(() => ({
-    total: items.length,
-    pending: items.filter(i => i.status === 'pending').length,
-    held: items.filter(i => i.status === 'held').length,
-    claimed: items.filter(i => i.status === 'claimed').length,
-  }), [items]);
+  const stats = useMemo(() => getStats(), [items]);
 
   return (
     <div className="space-y-6">
