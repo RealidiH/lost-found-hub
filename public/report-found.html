@@ -201,7 +201,6 @@
     </div>
   </div>
 
-  <script src="https://sql.js.org/dist/sql-wasm.js"></script>
   <script src="js/database.js"></script>
   <script>
     // Set default date to today
@@ -228,88 +227,85 @@
       document.getElementById('form-view').classList.remove('hidden');
     }
 
-    // Initialize database and form
-    initDatabase().then(() => {
-      // Form submission
-      document.getElementById('found-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form data
-        const category = document.querySelector('input[name="category"]:checked')?.value;
-        const description = document.getElementById('description').value.trim();
-        const location = document.getElementById('location').value.trim();
-        const date = document.getElementById('date').value;
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
+    // Form submission
+    document.getElementById('found-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form data
+      const category = document.querySelector('input[name="category"]:checked')?.value;
+      const description = document.getElementById('description').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const date = document.getElementById('date').value;
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
 
-        // Validation
-        let isValid = true;
+      // Validation
+      let isValid = true;
 
-        if (!category) {
-          document.getElementById('category-error').classList.remove('hidden');
-          isValid = false;
-        } else {
-          document.getElementById('category-error').classList.add('hidden');
-        }
+      if (!category) {
+        document.getElementById('category-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('category-error').classList.add('hidden');
+      }
 
-        if (description.length < 10) {
-          document.getElementById('description-error').classList.remove('hidden');
-          isValid = false;
-        } else {
-          document.getElementById('description-error').classList.add('hidden');
-        }
+      if (description.length < 10) {
+        document.getElementById('description-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('description-error').classList.add('hidden');
+      }
 
-        if (location.length < 3) {
-          document.getElementById('location-error').classList.remove('hidden');
-          isValid = false;
-        } else {
-          document.getElementById('location-error').classList.add('hidden');
-        }
+      if (location.length < 3) {
+        document.getElementById('location-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('location-error').classList.add('hidden');
+      }
 
-        if (!date) {
-          document.getElementById('date-error').classList.remove('hidden');
-          isValid = false;
-        } else {
-          document.getElementById('date-error').classList.add('hidden');
-        }
+      if (!date) {
+        document.getElementById('date-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('date-error').classList.add('hidden');
+      }
 
-        if (name.length < 2) {
-          document.getElementById('name-error').classList.remove('hidden');
-          isValid = false;
-        } else {
-          document.getElementById('name-error').classList.add('hidden');
-        }
+      if (name.length < 2) {
+        document.getElementById('name-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('name-error').classList.add('hidden');
+      }
 
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          document.getElementById('email-error').classList.remove('hidden');
-          isValid = false;
-        } else {
-          document.getElementById('email-error').classList.add('hidden');
-        }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('email-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('email-error').classList.add('hidden');
+      }
 
-        if (!isValid) return;
+      if (!isValid) return;
 
-        // Save to database
-        insertItem({
-          type: 'found',
-          category: category,
-          description: description,
-          location: location,
-          date: date,
-          reporterName: name,
-          reporterEmail: email,
-          reporterPhone: phone || undefined,
-          status: 'pending'
-        });
-
-        // Show success
-        document.getElementById('form-view').classList.add('hidden');
-        document.getElementById('success-view').classList.remove('hidden');
-        
-        showToast('Report submitted', 'Thank you for turning in the found item.');
+      // Save to database
+      insertItem({
+        type: 'found',
+        category: category,
+        description: description,
+        location: location,
+        date: date,
+        reporterName: name,
+        reporterEmail: email,
+        reporterPhone: phone || undefined,
+        status: 'pending'
       });
-    }).catch(err => console.error('Database init failed:', err));
+
+      // Show success
+      document.getElementById('form-view').classList.add('hidden');
+      document.getElementById('success-view').classList.remove('hidden');
+      
+      showToast('Report submitted', 'Thank you for turning in the found item.');
+    });
   </script>
 </body>
 </html>

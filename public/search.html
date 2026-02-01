@@ -115,7 +115,6 @@
     </a>
   </nav>
 
-  <script src="https://sql.js.org/dist/sql-wasm.js"></script>
   <script src="js/database.js"></script>
   <script>
     const searchInput = document.getElementById('search-input');
@@ -160,14 +159,12 @@
       `).join('');
     }
 
-    // Initialize database and render
-    initDatabase().then(() => {
-      renderItems();
-      
-      // Event listeners
-      searchInput.addEventListener('input', renderItems);
-      categoryFilter.addEventListener('change', renderItems);
-    }).catch(err => console.error('Database init failed:', err));
+    // Initial render
+    renderItems();
+
+    // Event listeners
+    searchInput.addEventListener('input', renderItems);
+    categoryFilter.addEventListener('change', renderItems);
   </script>
 </body>
 </html>
