@@ -1,7 +1,12 @@
-// Lost & Found Database Module - Uses localStorage for persistence
+// Lost & Found Database Module - Uses sql.js (SQLite in browser) for persistence
 
-const DB_KEY = 'lost-found-db';
+const DB_STORAGE_KEY = 'lost-found-sqljs-db';
 const ADMIN_SESSION_KEY = 'admin-logged-in';
+
+// Global database instance
+let db = null;
+let dbReady = false;
+let dbReadyCallbacks = [];
 
 // Categories and labels
 const CATEGORY_LABELS = {
@@ -31,107 +36,291 @@ const DEFAULT_ADMINS = [
   { username: 'security', password: 'security123' },
 ];
 
-// Initialize database
-function initDatabase() {
-  const existing = localStorage.getItem(DB_KEY);
-  if (!existing) {
-    const db = {
-      items: [],
-      admins: DEFAULT_ADMINS
-    };
-    localStorage.setItem(DB_KEY, JSON.stringify(db));
+// Initialize sql.js and database
+async function initDatabase() {
+  if (dbReady) return db;
+  
+  try {
+    // Load sql.js from CDN
+    const SQL = await initSqlJs({
+      locateFile: file => `https://sql.js.org/dist/${file}`
+    });
+    
+    // Try to load existing database from localStorage
+    const savedData = localStorage.getItem(DB_STORAGE_KEY);
+    if (savedData) {
+      const binaryArray = new Uint8Array(atob(savedData).split('').map(c => c.charCodeAt(0)));
+      db = new SQL.Database(binaryArray);
+    } else {
+      db = new SQL.Database();
+      createSchema();
+    }
+    
+    dbReady = true;
+    
+    // Call all waiting callbacks
+    dbReadyCallbacks.forEach(cb => cb(db));
+    dbReadyCallbacks = [];
+    
     return db;
+  } catch (error) {
+    console.error('Failed to initialize sql.js:', error);
+    throw error;
   }
-  return JSON.parse(existing);
 }
 
-// Save database
-function saveDatabase(db) {
-  localStorage.setItem(DB_KEY, JSON.stringify(db));
+// Create database schema
+function createSchema() {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS items (
+      id TEXT PRIMARY KEY,
+      type TEXT NOT NULL CHECK(type IN ('lost', 'found')),
+      category TEXT NOT NULL,
+      description TEXT NOT NULL,
+      location TEXT NOT NULL,
+      date TEXT NOT NULL,
+      reporter_name TEXT NOT NULL,
+      reporter_email TEXT NOT NULL,
+      reporter_phone TEXT,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'held', 'claimed', 'disposed')),
+      notes TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )
+  `);
+  
+  db.run(`
+    CREATE TABLE IF NOT EXISTS admins (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL
+    )
+  `);
+  
+  // Create indexes
+  db.run('CREATE INDEX IF NOT EXISTS idx_items_type ON items(type)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_items_status ON items(status)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_items_category ON items(category)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_items_created_at ON items(created_at)');
+  
+  // Insert default admins
+  DEFAULT_ADMINS.forEach(admin => {
+    db.run('INSERT OR IGNORE INTO admins (username, password) VALUES (?, ?)', 
+      [admin.username, admin.password]);
+  });
+  
+  saveDatabase();
+}
+
+// Save database to localStorage
+function saveDatabase() {
+  if (!db) return;
+  const data = db.export();
+  const base64 = btoa(String.fromCharCode.apply(null, data));
+  localStorage.setItem(DB_STORAGE_KEY, base64);
+}
+
+// Wait for database to be ready
+function onDatabaseReady(callback) {
+  if (dbReady) {
+    callback(db);
+  } else {
+    dbReadyCallbacks.push(callback);
+  }
+}
+
+// Generate unique ID
+function generateId() {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
 // Get all items
 function getAllItems() {
-  const db = initDatabase();
-  return db.items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  if (!db) return [];
+  
+  const results = db.exec(`
+    SELECT id, type, category, description, location, date, 
+           reporter_name as reporterName, reporter_email as reporterEmail, 
+           reporter_phone as reporterPhone, status, notes, 
+           created_at as createdAt, updated_at as updatedAt
+    FROM items 
+    ORDER BY created_at DESC
+  `);
+  
+  if (results.length === 0) return [];
+  
+  return results[0].values.map(row => {
+    const columns = results[0].columns;
+    const item = {};
+    columns.forEach((col, i) => {
+      item[col] = row[i];
+    });
+    return item;
+  });
 }
 
 // Get item by ID
 function getItemById(id) {
-  const db = initDatabase();
-  return db.items.find(item => item.id === id) || null;
+  if (!db) return null;
+  
+  const results = db.exec(`
+    SELECT id, type, category, description, location, date, 
+           reporter_name as reporterName, reporter_email as reporterEmail, 
+           reporter_phone as reporterPhone, status, notes, 
+           created_at as createdAt, updated_at as updatedAt
+    FROM items 
+    WHERE id = ?
+  `, [id]);
+  
+  if (results.length === 0 || results[0].values.length === 0) return null;
+  
+  const columns = results[0].columns;
+  const row = results[0].values[0];
+  const item = {};
+  columns.forEach((col, i) => {
+    item[col] = row[i];
+  });
+  return item;
 }
 
 // Insert item
 function insertItem(item) {
-  const db = initDatabase();
-  const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  if (!db) return null;
+  
+  const id = generateId();
   const now = new Date().toISOString();
   
-  const newItem = {
+  db.run(`
+    INSERT INTO items (id, type, category, description, location, date, 
+                       reporter_name, reporter_email, reporter_phone, status, notes, 
+                       created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `, [
+    id,
+    item.type,
+    item.category,
+    item.description,
+    item.location,
+    item.date,
+    item.reporterName,
+    item.reporterEmail,
+    item.reporterPhone || null,
+    item.status || 'pending',
+    item.notes || null,
+    now,
+    now
+  ]);
+  
+  saveDatabase();
+  
+  return {
     ...item,
     id,
     createdAt: now,
     updatedAt: now
   };
-  
-  db.items.push(newItem);
-  saveDatabase(db);
-  return newItem;
 }
 
 // Update item
 function updateItem(id, updates) {
-  const db = initDatabase();
-  const index = db.items.findIndex(item => item.id === id);
+  if (!db) return null;
   
-  if (index !== -1) {
-    db.items[index] = {
-      ...db.items[index],
-      ...updates,
-      updatedAt: new Date().toISOString()
-    };
-    saveDatabase(db);
-    return db.items[index];
-  }
-  return null;
+  const now = new Date().toISOString();
+  const setClauses = [];
+  const values = [];
+  
+  const fieldMap = {
+    type: 'type',
+    category: 'category',
+    description: 'description',
+    location: 'location',
+    date: 'date',
+    reporterName: 'reporter_name',
+    reporterEmail: 'reporter_email',
+    reporterPhone: 'reporter_phone',
+    status: 'status',
+    notes: 'notes'
+  };
+  
+  Object.entries(updates).forEach(([key, value]) => {
+    if (fieldMap[key]) {
+      setClauses.push(`${fieldMap[key]} = ?`);
+      values.push(value);
+    }
+  });
+  
+  if (setClauses.length === 0) return getItemById(id);
+  
+  setClauses.push('updated_at = ?');
+  values.push(now);
+  values.push(id);
+  
+  db.run(`UPDATE items SET ${setClauses.join(', ')} WHERE id = ?`, values);
+  saveDatabase();
+  
+  return getItemById(id);
 }
 
 // Delete item
 function deleteItem(id) {
-  const db = initDatabase();
-  db.items = db.items.filter(item => item.id !== id);
-  saveDatabase(db);
+  if (!db) return;
+  db.run('DELETE FROM items WHERE id = ?', [id]);
+  saveDatabase();
 }
 
 // Search items (found items only, held or pending)
 function searchItems(query = '', category = null) {
-  const db = initDatabase();
+  if (!db) return [];
   
-  return db.items.filter(item => {
-    if (item.type !== 'found') return false;
-    if (item.status !== 'held' && item.status !== 'pending') return false;
-    
-    if (query) {
-      const q = query.toLowerCase();
-      if (!item.description.toLowerCase().includes(q) && 
-          !item.location.toLowerCase().includes(q)) {
-        return false;
-      }
-    }
-    
-    if (category && item.category !== category) return false;
-    
-    return true;
-  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  let sql = `
+    SELECT id, type, category, description, location, date, 
+           reporter_name as reporterName, reporter_email as reporterEmail, 
+           reporter_phone as reporterPhone, status, notes, 
+           created_at as createdAt, updated_at as updatedAt
+    FROM items 
+    WHERE type = 'found' AND (status = 'held' OR status = 'pending')
+  `;
+  
+  const params = [];
+  
+  if (query) {
+    sql += ` AND (LOWER(description) LIKE ? OR LOWER(location) LIKE ?)`;
+    const searchTerm = `%${query.toLowerCase()}%`;
+    params.push(searchTerm, searchTerm);
+  }
+  
+  if (category) {
+    sql += ` AND category = ?`;
+    params.push(category);
+  }
+  
+  sql += ` ORDER BY created_at DESC`;
+  
+  const results = db.exec(sql, params);
+  
+  if (results.length === 0) return [];
+  
+  return results[0].values.map(row => {
+    const columns = results[0].columns;
+    const item = {};
+    columns.forEach((col, i) => {
+      item[col] = row[i];
+    });
+    return item;
+  });
 }
 
 // Validate admin credentials
 function validateAdmin(username, password) {
-  const db = initDatabase();
-  return db.admins.some(admin => 
-    admin.username === username && admin.password === password
+  if (!db) return false;
+  
+  const results = db.exec(
+    'SELECT COUNT(*) as count FROM admins WHERE username = ? AND password = ?',
+    [username, password]
   );
+  
+  if (results.length === 0) return false;
+  return results[0].values[0][0] > 0;
 }
 
 // Admin session management
@@ -149,6 +338,8 @@ function setAdminLoggedIn(value) {
 
 // Get statistics
 function getStats() {
+  if (!db) return { total: 0, pending: 0, held: 0, claimed: 0, disposed: 0 };
+  
   const items = getAllItems();
   return {
     total: items.length,
