@@ -112,6 +112,7 @@
     </div>
   </div>
 
+  <script src="https://sql.js.org/dist/sql-wasm.js"></script>
   <script src="js/database.js"></script>
   <script>
     // Check if already logged in
@@ -119,53 +120,56 @@
       window.location.href = 'admin-dashboard.html';
     }
 
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-      const submitBtn = document.getElementById('submit-btn');
+    // Initialize database
+    initDatabase().then(() => {
+      document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const submitBtn = document.getElementById('submit-btn');
 
-      // Validation
-      let isValid = true;
+        // Validation
+        let isValid = true;
 
-      if (!username) {
-        document.getElementById('username-error').classList.remove('hidden');
-        isValid = false;
-      } else {
-        document.getElementById('username-error').classList.add('hidden');
-      }
+        if (!username) {
+          document.getElementById('username-error').classList.remove('hidden');
+          isValid = false;
+        } else {
+          document.getElementById('username-error').classList.add('hidden');
+        }
 
-      if (!password) {
-        document.getElementById('password-error').classList.remove('hidden');
-        isValid = false;
-      } else {
-        document.getElementById('password-error').classList.add('hidden');
-      }
+        if (!password) {
+          document.getElementById('password-error').classList.remove('hidden');
+          isValid = false;
+        } else {
+          document.getElementById('password-error').classList.add('hidden');
+        }
 
-      if (!isValid) return;
+        if (!isValid) return;
 
-      // Simulate network delay
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner" style="width: 1rem; height: 1rem; margin-right: 0.5rem;"></span> Signing in...';
+        // Simulate network delay
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="width: 1rem; height: 1rem; margin-right: 0.5rem;"></span> Signing in...';
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-      if (validateAdmin(username, password)) {
-        setAdminLoggedIn(true);
-        showToast('Welcome back!', 'You have successfully logged in.');
-        setTimeout(() => {
-          window.location.href = 'admin-dashboard.html';
-        }, 500);
-      } else {
-        showToast('Login failed', 'Invalid username or password.');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-          Sign In
-        `;
-      }
-    });
+        if (validateAdmin(username, password)) {
+          setAdminLoggedIn(true);
+          showToast('Welcome back!', 'You have successfully logged in.');
+          setTimeout(() => {
+            window.location.href = 'admin-dashboard.html';
+          }, 500);
+        } else {
+          showToast('Login failed', 'Invalid username or password.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+            Sign In
+          `;
+        }
+      });
+    }).catch(err => console.error('Database init failed:', err));
   </script>
 </body>
 </html>

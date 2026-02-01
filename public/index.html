@@ -142,6 +142,11 @@
     </a>
   </nav>
 
+  <script src="https://sql.js.org/dist/sql-wasm.js"></script>
   <script src="js/database.js"></script>
+  <script>
+    // Initialize database on page load
+    initDatabase().catch(err => console.error('Database init failed:', err));
+  </script>
 </body>
 </html>

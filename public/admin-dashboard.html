@@ -222,6 +222,7 @@
     </div>
   </div>
 
+  <script src="https://sql.js.org/dist/sql-wasm.js"></script>
   <script src="js/database.js"></script>
   <script>
     // Check auth
@@ -418,8 +419,10 @@
     categoryFilter.addEventListener('change', renderItems);
     statusFilter.addEventListener('change', renderItems);
 
-    // Initial render
-    renderItems();
+    // Initialize database and render
+    initDatabase().then(() => {
+      renderItems();
+    }).catch(err => console.error('Database init failed:', err));
   </script>
 </body>
 </html>
