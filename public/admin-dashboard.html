@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin Dashboard - Campus Lost and Found Management System">
+  <title>Admin Dashboard - Campus Lost & Found</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <a href="index.html" class="header-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        Lost & Found
+      </a>
+      
+      <nav class="header-nav">
+        <a href="index.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Home
+        </a>
+        <a href="report-lost.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9.5 12.5 11 14l3.5-3.5"/></svg>
+          Report Lost
+        </a>
+        <a href="report-found.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9.5 12.5 11 14l3.5-3.5"/></svg>
+          Report Found
+        </a>
+        <a href="search.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          Search Items
+        </a>
+      </nav>
+      
+      <button onclick="logout()" class="admin-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        <span class="hide-mobile">Logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div>
+        <h1 style="font-size: 1.5rem; font-weight: 700;">Admin Dashboard</h1>
+        <p class="text-muted">Manage lost and found items</p>
+      </div>
+      <button onclick="logout()" class="btn btn-outline" style="width: auto;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="card stat-card">
+        <p class="stat-label">Total Items</p>
+        <p class="stat-value" id="stat-total">0</p>
+      </div>
+      <div class="card stat-card">
+        <p class="stat-label">Pending Review</p>
+        <p class="stat-value destructive" id="stat-pending">0</p>
+      </div>
+      <div class="card stat-card">
+        <p class="stat-label">Currently Held</p>
+        <p class="stat-value primary" id="stat-held">0</p>
+      </div>
+      <div class="card stat-card">
+        <p class="stat-label">Claimed</p>
+        <p class="stat-value muted" id="stat-claimed">0</p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+      <div class="card-content" style="padding-top: 1.5rem;">
+        <div class="filters-row" style="flex-wrap: wrap;">
+          <div class="search-container flex-1" style="min-width: 200px;">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="search-input" class="form-input search-input" 
+              placeholder="Search items, reporters...">
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <div class="select-wrapper" style="min-width: 8rem;">
+              <select id="type-filter" class="form-select">
+                <option value="all">All Types</option>
+                <option value="lost">Lost</option>
+                <option value="found">Found</option>
+              </select>
+              <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            <div class="select-wrapper" style="min-width: 10rem;">
+              <select id="category-filter" class="form-select">
+                <option value="all">All Categories</option>
+                <option value="electronics">Electronics</option>
+                <option value="clothing-bags">Clothing & Bags</option>
+                <option value="school-supplies">School Supplies</option>
+                <option value="personal-items">Personal Items</option>
+              </select>
+              <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            <div class="select-wrapper" style="min-width: 8rem;">
+              <select id="status-filter" class="form-select">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="held">Held</option>
+                <option value="claimed">Claimed</option>
+                <option value="disposed">Disposed</option>
+              </select>
+              <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            <button onclick="renderItems()" class="btn btn-outline btn-icon" title="Refresh">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="card">
+      <div id="table-container">
+        <!-- Table will be rendered here -->
+      </div>
+      <div id="empty-state" class="empty-state hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        <h3>No items found</h3>
+        <p id="empty-message">No items have been reported yet.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Item Detail Modal -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-title">
+          <span id="modal-type-badge" class="badge badge-default">Lost</span>
+          <span id="modal-category">Electronics</span>
+        </div>
+        <p class="modal-description" id="modal-date">Reported on Jan 1, 2024</p>
+      </div>
+      <div class="modal-body">
+        <div class="detail-row">
+          <p class="detail-label">Description</p>
+          <p class="detail-value" id="modal-description"></p>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-row">
+            <p class="detail-label">Location</p>
+            <p class="detail-value" id="modal-location"></p>
+          </div>
+          <div class="detail-row">
+            <p class="detail-label">Date</p>
+            <p class="detail-value" id="modal-item-date"></p>
+          </div>
+        </div>
+        <div class="detail-row border-t pt-6" style="margin-top: 1rem;">
+          <p class="detail-label">Reporter</p>
+          <p class="detail-value" style="font-weight: 500;" id="modal-reporter-name"></p>
+          <p class="text-sm text-muted" id="modal-reporter-email"></p>
+          <p class="text-sm text-muted" id="modal-reporter-phone"></p>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;">
+          <label class="form-label" for="modal-notes">Admin Notes</label>
+          <textarea id="modal-notes" class="form-input form-textarea" 
+            placeholder="Add notes about this item..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="deleteCurrentItem()" class="btn btn-destructive btn-sm" style="width: auto;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          Delete
+        </button>
+        <div style="display: flex; gap: 0.5rem; flex: 1; justify-content: flex-end;">
+          <button id="btn-mark-held" onclick="updateStatus('held')" class="btn btn-outline btn-sm" style="width: auto;">
+            Mark as Held
+          </button>
+          <button id="btn-mark-claimed" onclick="updateStatus('claimed')" class="btn btn-primary btn-sm" style="width: auto;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark Claimed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav">
+    <a href="index.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <a href="report-lost.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+      Lost
+    </a>
+    <a href="report-found.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+      Found
+    </a>
+    <a href="search.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Search
+    </a>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast-container" class="toast-container">
+    <div id="toast" class="toast">
+      <div id="toast-title" class="toast-title"></div>
+      <div id="toast-description" class="toast-description"></div>
+    </div>
+  </div>
+
+  <script src="js/database.js"></script>
+  <script>
+    // Check auth
+    if (!isAdminLoggedIn()) {
+      window.location.href = 'admin-login.html';
+    }
+
+    let currentItem = null;
+    let allItems = [];
+
+    const searchInput = document.getElementById('search-input');
+    const typeFilter = document.getElementById('type-filter');
+    const categoryFilter = document.getElementById('category-filter');
+    const statusFilter = document.getElementById('status-filter');
+    const tableContainer = document.getElementById('table-container');
+    const emptyState = document.getElementById('empty-state');
+    const emptyMessage = document.getElementById('empty-message');
+
+    function logout() {
+      setAdminLoggedIn(false);
+      showToast('Logged out', 'You have been logged out.');
+      setTimeout(() => {
+        window.location.href = 'admin-login.html';
+      }, 500);
+    }
+
+    function updateStats() {
+      const stats = getStats();
+      document.getElementById('stat-total').textContent = stats.total;
+      document.getElementById('stat-pending').textContent = stats.pending;
+      document.getElementById('stat-held').textContent = stats.held;
+      document.getElementById('stat-claimed').textContent = stats.claimed;
+    }
+
+    function getFilteredItems() {
+      const search = searchInput.value.toLowerCase();
+      const type = typeFilter.value;
+      const category = categoryFilter.value;
+      const status = statusFilter.value;
+
+      return allItems.filter(item => {
+        const matchesSearch = !search || 
+          item.description.toLowerCase().includes(search) ||
+          item.location.toLowerCase().includes(search) ||
+          item.reporterName.toLowerCase().includes(search) ||
+          item.reporterEmail.toLowerCase().includes(search);
+        
+        const matchesType = type === 'all' || item.type === type;
+        const matchesCategory = category === 'all' || item.category === category;
+        const matchesStatus = status === 'all' || item.status === status;
+
+        return matchesSearch && matchesType && matchesCategory && matchesStatus;
+      });
+    }
+
+    function getStatusBadgeClass(status) {
+      switch (status) {
+        case 'pending': return 'badge-secondary';
+        case 'held': return 'badge-default';
+        case 'claimed': return 'badge-outline';
+        case 'disposed': return 'badge-destructive';
+        default: return 'badge-secondary';
+      }
+    }
+
+    function renderItems() {
+      allItems = getAllItems();
+      updateStats();
+      
+      const filteredItems = getFilteredItems();
+
+      if (filteredItems.length === 0) {
+        tableContainer.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        emptyMessage.textContent = allItems.length === 0 
+          ? "No items have been reported yet."
+          : "Try adjusting your filters.";
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      tableContainer.innerHTML = `
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Category</th>
+                <th class="hide-md">Description</th>
+                <th class="hide-lg">Reporter</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredItems.map(item => `
+                <tr>
+                  <td>
+                    <span class="badge ${item.type === 'lost' ? 'badge-destructive' : 'badge-default'}">
+                      ${item.type === 'lost' ? 'Lost' : 'Found'}
+                    </span>
+                  </td>
+                  <td style="font-weight: 500;">${CATEGORY_LABELS[item.category]}</td>
+                  <td class="hide-md table-truncate">${item.description}</td>
+                  <td class="hide-lg">${item.reporterName}</td>
+                  <td>${formatDateShort(item.date)}</td>
+                  <td>
+                    <span class="badge ${getStatusBadgeClass(item.status)}">
+                      ${STATUS_LABELS[item.status]}
+                    </span>
+                  </td>
+                  <td style="text-align: right;">
+                    <button onclick="openItem('${item.id}')" class="btn btn-ghost btn-icon" title="View details">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function openItem(id) {
+      currentItem = allItems.find(item => item.id === id);
+      if (!currentItem) return;
+
+      document.getElementById('modal-type-badge').textContent = currentItem.type === 'lost' ? 'Lost' : 'Found';
+      document.getElementById('modal-type-badge').className = `badge ${currentItem.type === 'lost' ? 'badge-destructive' : 'badge-default'}`;
+      document.getElementById('modal-category').textContent = CATEGORY_LABELS[currentItem.category];
+      document.getElementById('modal-date').textContent = `Reported on ${formatDate(currentItem.createdAt)}`;
+      document.getElementById('modal-description').textContent = currentItem.description;
+      document.getElementById('modal-location').textContent = currentItem.location;
+      document.getElementById('modal-item-date').textContent = formatDate(currentItem.date);
+      document.getElementById('modal-reporter-name').textContent = currentItem.reporterName;
+      document.getElementById('modal-reporter-email').textContent = currentItem.reporterEmail;
+      document.getElementById('modal-reporter-phone').textContent = currentItem.reporterPhone || '';
+      document.getElementById('modal-notes').value = currentItem.notes || '';
+
+      // Show/hide status buttons based on current status
+      document.getElementById('btn-mark-held').style.display = currentItem.status !== 'held' ? 'inline-flex' : 'none';
+      document.getElementById('btn-mark-claimed').style.display = currentItem.status !== 'claimed' ? 'inline-flex' : 'none';
+
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      currentItem = null;
+    }
+
+    function updateStatus(newStatus) {
+      if (!currentItem) return;
+      
+      const notes = document.getElementById('modal-notes').value;
+      updateItem(currentItem.id, { status: newStatus, notes: notes });
+      
+      showToast('Status updated', `Item marked as ${STATUS_LABELS[newStatus]}.`);
+      closeModal();
+      renderItems();
+    }
+
+    function deleteCurrentItem() {
+      if (!currentItem) return;
+      
+      if (confirm('Are you sure you want to delete this item?')) {
+        deleteItem(currentItem.id);
+        showToast('Item deleted', 'The item has been removed.');
+        closeModal();
+        renderItems();
+      }
+    }
+
+    // Close modal on overlay click
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // Event listeners for filters
+    searchInput.addEventListener('input', renderItems);
+    typeFilter.addEventListener('change', renderItems);
+    categoryFilter.addEventListener('change', renderItems);
+    statusFilter.addEventListener('change', renderItems);
+
+    // Initial render
+    renderItems();
+  </script>
+</body>
+</html>

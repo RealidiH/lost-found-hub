@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin login - Campus Lost and Found Management System">
+  <title>Admin Login - Campus Lost & Found</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <a href="index.html" class="header-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        Lost & Found
+      </a>
+      
+      <nav class="header-nav">
+        <a href="index.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Home
+        </a>
+        <a href="report-lost.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9.5 12.5 11 14l3.5-3.5"/></svg>
+          Report Lost
+        </a>
+        <a href="report-found.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9.5 12.5 11 14l3.5-3.5"/></svg>
+          Report Found
+        </a>
+        <a href="search.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          Search Items
+        </a>
+      </nav>
+      
+      <a href="admin-login.html" class="admin-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        <span class="hide-mobile">Admin</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content login-container">
+    <div class="card login-card">
+      <div class="login-header">
+        <div class="login-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </div>
+        <h2 class="card-title">Admin Login</h2>
+        <p class="card-description">Sign in to access the Lost & Found management dashboard</p>
+      </div>
+      <div class="card-content">
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-input" 
+              placeholder="Enter your username" required>
+            <p class="form-error hidden" id="username-error">Username is required</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-input" 
+              placeholder="Enter your password" required>
+            <p class="form-error hidden" id="password-error">Password is required</p>
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn btn-primary btn-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+            Sign In
+          </button>
+        </form>
+
+        <div class="demo-credentials">
+          <p style="font-weight: 500; margin-bottom: 0.5rem;">Demo Credentials:</p>
+          <p class="text-muted">Username: <code>admin</code></p>
+          <p class="text-muted">Password: <code>admin123</code></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav">
+    <a href="index.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <a href="report-lost.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+      Lost
+    </a>
+    <a href="report-found.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+      Found
+    </a>
+    <a href="search.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Search
+    </a>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast-container" class="toast-container">
+    <div id="toast" class="toast">
+      <div id="toast-title" class="toast-title"></div>
+      <div id="toast-description" class="toast-description"></div>
+    </div>
+  </div>
+
+  <script src="js/database.js"></script>
+  <script>
+    // Check if already logged in
+    if (isAdminLoggedIn()) {
+      window.location.href = 'admin-dashboard.html';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const submitBtn = document.getElementById('submit-btn');
+
+      // Validation
+      let isValid = true;
+
+      if (!username) {
+        document.getElementById('username-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('username-error').classList.add('hidden');
+      }
+
+      if (!password) {
+        document.getElementById('password-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('password-error').classList.add('hidden');
+      }
+
+      if (!isValid) return;
+
+      // Simulate network delay
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner" style="width: 1rem; height: 1rem; margin-right: 0.5rem;"></span> Signing in...';
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      if (validateAdmin(username, password)) {
+        setAdminLoggedIn(true);
+        showToast('Welcome back!', 'You have successfully logged in.');
+        setTimeout(() => {
+          window.location.href = 'admin-dashboard.html';
+        }, 500);
+      } else {
+        showToast('Login failed', 'Invalid username or password.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          Sign In
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
