@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Report a found item on campus - Campus Lost and Found Management System">
+  <title>Report Found Item - Campus Lost & Found</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <a href="index.html" class="header-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        Lost & Found
+      </a>
+      
+      <nav class="header-nav">
+        <a href="index.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Home
+        </a>
+        <a href="report-lost.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9.5 12.5 11 14l3.5-3.5"/></svg>
+          Report Lost
+        </a>
+        <a href="report-found.html" class="nav-link active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9.5 12.5 11 14l3.5-3.5"/></svg>
+          Report Found
+        </a>
+        <a href="search.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          Search Items
+        </a>
+      </nav>
+      
+      <a href="admin-login.html" class="admin-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        <span class="hide-mobile">Admin</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Form View -->
+    <div id="form-view">
+      <div class="page-header">
+        <div class="page-header-icon" style="background-color: hsl(222, 47%, 95%); color: var(--primary);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m9 15 2 2 4-4"/></svg>
+        </div>
+        <div>
+          <h1>Report Found Item</h1>
+          <p>Help us return this item to its owner</p>
+        </div>
+      </div>
+
+      <div class="card" style="max-width: 42rem; margin: 0 auto;">
+        <div class="card-header" style="text-align: left;">
+          <h3 class="card-title">Item Details</h3>
+          <p class="card-description">Describe the item you found so we can match it with its owner</p>
+        </div>
+        <div class="card-content">
+          <form id="found-form">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <div class="radio-group" id="category-group">
+                <label class="radio-item" data-value="electronics">
+                  <input type="radio" name="category" value="electronics" class="radio-input" required>
+                  <span class="radio-label">
+                    <span class="radio-label-title">Electronics</span>
+                    <span class="radio-label-description">Phones, laptops, tablets, chargers, earbuds</span>
+                  </span>
+                </label>
+                <label class="radio-item" data-value="clothing-bags">
+                  <input type="radio" name="category" value="clothing-bags" class="radio-input">
+                  <span class="radio-label">
+                    <span class="radio-label-title">Clothing & Bags</span>
+                    <span class="radio-label-description">Bags, jackets, hats, scarves</span>
+                  </span>
+                </label>
+                <label class="radio-item" data-value="school-supplies">
+                  <input type="radio" name="category" value="school-supplies" class="radio-input">
+                  <span class="radio-label">
+                    <span class="radio-label-title">School Supplies</span>
+                    <span class="radio-label-description">Textbooks, notebooks, ID cards, stationery</span>
+                  </span>
+                </label>
+                <label class="radio-item" data-value="personal-items">
+                  <input type="radio" name="category" value="personal-items" class="radio-input">
+                  <span class="radio-label">
+                    <span class="radio-label-title">Personal Items</span>
+                    <span class="radio-label-description">Watches, jewelry, glasses, wallets, keys</span>
+                  </span>
+                </label>
+              </div>
+              <p class="form-error hidden" id="category-error">Please select a category</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="description">Description *</label>
+              <textarea id="description" name="description" class="form-input form-textarea" 
+                placeholder="Describe the item in detail (color, brand, distinguishing features...)" required></textarea>
+              <p class="form-description">Include details like color, brand, size, and any unique identifiers</p>
+              <p class="form-error hidden" id="description-error">Please provide at least 10 characters</p>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label" for="location">Where Found *</label>
+                <input type="text" id="location" name="location" class="form-input" 
+                  placeholder="e.g., Cafeteria, near entrance" required>
+                <p class="form-error hidden" id="location-error">Please provide the location</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="date">Date Found *</label>
+                <input type="date" id="date" name="date" class="form-input" required>
+                <p class="form-error hidden" id="date-error">Please select the date</p>
+              </div>
+            </div>
+
+            <div class="border-t pt-6 mt-4">
+              <h3 style="font-weight: 500; margin-bottom: 1rem;">Your Contact Information</h3>
+              
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="name">Your Name *</label>
+                  <input type="text" id="name" name="name" class="form-input" 
+                    placeholder="Full name" required>
+                  <p class="form-error hidden" id="name-error">Please enter your name</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="phone">Phone (optional)</label>
+                  <input type="tel" id="phone" name="phone" class="form-input" 
+                    placeholder="Your phone number">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="email">Email *</label>
+                <input type="email" id="email" name="email" class="form-input" 
+                  placeholder="your.email@school.edu" required>
+                <p class="form-description">In case we need to contact you for more information</p>
+                <p class="form-error hidden" id="email-error">Please enter a valid email address</p>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="margin-top: 1rem;">
+              Submit Report
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success View -->
+    <div id="success-view" class="hidden">
+      <div class="success-container">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h1>Thank You!</h1>
+        <p>Your found item report has been submitted. Please bring the item to the Security Office so we can hold it for its owner.</p>
+        <div class="success-buttons">
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+          <button onclick="resetForm()" class="btn btn-outline">Report Another Item</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav">
+    <a href="index.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <a href="report-lost.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+      Lost
+    </a>
+    <a href="report-found.html" class="mobile-nav-link active">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+      Found
+    </a>
+    <a href="search.html" class="mobile-nav-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      Search
+    </a>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast-container" class="toast-container">
+    <div id="toast" class="toast">
+      <div id="toast-title" class="toast-title"></div>
+      <div id="toast-description" class="toast-description"></div>
+    </div>
+  </div>
+
+  <script src="js/database.js"></script>
+  <script>
+    // Set default date to today
+    document.getElementById('date').valueAsDate = new Date();
+    document.getElementById('date').max = new Date().toISOString().split('T')[0];
+
+    // Radio button styling
+    document.querySelectorAll('.radio-item').forEach(item => {
+      const input = item.querySelector('input');
+      input.addEventListener('change', () => {
+        document.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
+        if (input.checked) {
+          item.classList.add('selected');
+        }
+      });
+    });
+
+    // Reset form
+    function resetForm() {
+      document.getElementById('found-form').reset();
+      document.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
+      document.getElementById('date').valueAsDate = new Date();
+      document.getElementById('success-view').classList.add('hidden');
+      document.getElementById('form-view').classList.remove('hidden');
+    }
+
+    // Form submission
+    document.getElementById('found-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form data
+      const category = document.querySelector('input[name="category"]:checked')?.value;
+      const description = document.getElementById('description').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const date = document.getElementById('date').value;
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      // Validation
+      let isValid = true;
+
+      if (!category) {
+        document.getElementById('category-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('category-error').classList.add('hidden');
+      }
+
+      if (description.length < 10) {
+        document.getElementById('description-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('description-error').classList.add('hidden');
+      }
+
+      if (location.length < 3) {
+        document.getElementById('location-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('location-error').classList.add('hidden');
+      }
+
+      if (!date) {
+        document.getElementById('date-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('date-error').classList.add('hidden');
+      }
+
+      if (name.length < 2) {
+        document.getElementById('name-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('name-error').classList.add('hidden');
+      }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('email-error').classList.remove('hidden');
+        isValid = false;
+      } else {
+        document.getElementById('email-error').classList.add('hidden');
+      }
+
+      if (!isValid) return;
+
+      // Save to database
+      insertItem({
+        type: 'found',
+        category: category,
+        description: description,
+        location: location,
+        date: date,
+        reporterName: name,
+        reporterEmail: email,
+        reporterPhone: phone || undefined,
+        status: 'pending'
+      });
+
+      // Show success
+      document.getElementById('form-view').classList.add('hidden');
+      document.getElementById('success-view').classList.remove('hidden');
+      
+      showToast('Report submitted', 'Thank you for turning in the found item.');
+    });
+  </script>
+</body>
+</html>
