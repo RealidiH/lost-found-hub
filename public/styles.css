@@ -448,6 +448,88 @@ a {
   margin-top: 0.25rem;
 }
 
+/* Image Upload */
+.image-upload {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.image-upload:hover {
+  border-color: var(--primary);
+  background-color: var(--accent);
+}
+
+.image-upload.has-image {
+  border-style: solid;
+  padding: 0.5rem;
+}
+
+.image-upload-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 0.5rem;
+  color: var(--muted-foreground);
+}
+
+.image-upload-text {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.image-upload-text strong {
+  color: var(--primary);
+}
+
+.image-upload-hint {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+}
+
+.image-upload input[type="file"] {
+  display: none;
+}
+
+.image-preview {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: var(--radius);
+  object-fit: contain;
+}
+
+.image-preview-remove {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  transition: opacity 0.2s;
+}
+
+.image-preview-remove:hover {
+  opacity: 0.8;
+}
+
 .form-error {
   font-size: 0.75rem;
   color: var(--destructive);
