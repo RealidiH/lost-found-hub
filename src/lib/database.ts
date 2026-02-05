@@ -21,6 +21,8 @@ export async function initDatabase(): Promise<Database> {
         .map((char) => char.charCodeAt(0))
     );
     db = new SQL.Database(binaryArray);
+    // Run migrations for existing databases
+    migrateDatabase(db);
   } else {
     db = new SQL.Database();
     createTables(db);
@@ -38,6 +40,23 @@ export function saveDatabase(): void {
   localStorage.setItem(DB_STORAGE_KEY, base64);
 }
 
+// Migrate existing database to add new columns
+function migrateDatabase(database: Database): void {
+  try {
+    // Check if image column exists
+    const tableInfo = database.exec("PRAGMA table_info(items)");
+    if (tableInfo.length > 0) {
+      const columns = tableInfo[0].values.map(row => row[1] as string);
+      if (!columns.includes('image')) {
+        database.run("ALTER TABLE items ADD COLUMN image TEXT");
+        saveDatabase();
+      }
+    }
+  } catch (error) {
+    console.error('Migration error:', error);
+  }
+}
+
 // Create tables
 function createTables(database: Database): void {
   database.run(`
@@ -53,6 +72,7 @@ function createTables(database: Database): void {
       reporter_phone TEXT,
       status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'held', 'claimed', 'disposed')),
       notes TEXT,
+      image TEXT,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
@@ -95,7 +115,7 @@ export function getAllItems(): Item[] {
   if (!db) return [];
 
   const results = db.exec(
-    'SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, created_at, updated_at FROM items ORDER BY created_at DESC'
+    'SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, image, created_at, updated_at FROM items ORDER BY created_at DESC'
   );
 
   if (results.length === 0) return [];
@@ -112,8 +132,9 @@ export function getAllItems(): Item[] {
     reporterPhone: row[8] as string | undefined,
     status: row[9] as ItemStatus,
     notes: row[10] as string | undefined,
-    createdAt: row[11] as string,
-    updatedAt: row[12] as string,
+    image: row[11] as string | undefined,
+    createdAt: row[12] as string,
+    updatedAt: row[13] as string,
   }));
 }
 
@@ -121,7 +142,7 @@ export function getItemById(id: string): Item | null {
   if (!db) return null;
 
   const results = db.exec(
-    'SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, created_at, updated_at FROM items WHERE id = ?',
+    'SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, image, created_at, updated_at FROM items WHERE id = ?',
     [id]
   );
 
@@ -140,8 +161,9 @@ export function getItemById(id: string): Item | null {
     reporterPhone: row[8] as string | undefined,
     status: row[9] as ItemStatus,
     notes: row[10] as string | undefined,
-    createdAt: row[11] as string,
-    updatedAt: row[12] as string,
+    image: row[11] as string | undefined,
+    createdAt: row[12] as string,
+    updatedAt: row[13] as string,
   };
 }
 
@@ -152,8 +174,8 @@ export function insertItem(item: Omit<Item, 'id' | 'createdAt' | 'updatedAt'>): 
   const now = new Date().toISOString();
 
   db.run(
-    `INSERT INTO items (id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO items (id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, image, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       id,
       item.type,
@@ -166,6 +188,7 @@ export function insertItem(item: Omit<Item, 'id' | 'createdAt' | 'updatedAt'>): 
       item.reporterPhone || null,
       item.status,
       item.notes || null,
+      item.image || null,
       now,
       now,
     ]
@@ -225,7 +248,7 @@ export function getItemsByType(type: ItemType): Item[] {
   if (!db) return [];
 
   const results = db.exec(
-    'SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, created_at, updated_at FROM items WHERE type = ? ORDER BY created_at DESC',
+    'SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, image, created_at, updated_at FROM items WHERE type = ? ORDER BY created_at DESC',
     [type]
   );
 
@@ -243,15 +266,16 @@ export function getItemsByType(type: ItemType): Item[] {
     reporterPhone: row[8] as string | undefined,
     status: row[9] as ItemStatus,
     notes: row[10] as string | undefined,
-    createdAt: row[11] as string,
-    updatedAt: row[12] as string,
+    image: row[11] as string | undefined,
+    createdAt: row[12] as string,
+    updatedAt: row[13] as string,
   }));
 }
 
 export function searchItems(query: string, category?: ItemCategory): Item[] {
   if (!db) return [];
 
-  let sql = `SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, created_at, updated_at 
+  let sql = `SELECT id, type, category, description, location, date, reporter_name, reporter_email, reporter_phone, status, notes, image, created_at, updated_at 
              FROM items 
              WHERE type = 'found' AND (status = 'held' OR status = 'pending')`;
   const params: string[] = [];
@@ -284,8 +308,9 @@ export function searchItems(query: string, category?: ItemCategory): Item[] {
     reporterPhone: row[8] as string | undefined,
     status: row[9] as ItemStatus,
     notes: row[10] as string | undefined,
-    createdAt: row[11] as string,
-    updatedAt: row[12] as string,
+    image: row[11] as string | undefined,
+    createdAt: row[12] as string,
+    updatedAt: row[13] as string,
   }));
 }
 

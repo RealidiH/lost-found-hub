@@ -24,6 +24,7 @@ export interface Item {
   reporterPhone?: string;
   status: ItemStatus;
   notes?: string;
+  image?: string;          // Base64 encoded image data
   createdAt: string;
   updatedAt: string;
 }
