@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { insertItem } from '@/lib/database';
 import { ItemCategory, CATEGORY_LABELS, CATEGORY_EXAMPLES } from '@/types/item';
+import { ImageUpload } from '@/components/ImageUpload';
 
 const formSchema = z.object({
   category: z.enum(['electronics', 'clothing-bags', 'school-supplies', 'personal-items'] as const, {
@@ -40,12 +41,14 @@ const formSchema = z.object({
     .trim()
     .max(20, 'Phone number must be less than 20 characters')
     .optional(),
+  image: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
 const ReportLostPage = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [imageData, setImageData] = useState<string | undefined>();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -73,6 +76,7 @@ const ReportLostPage = () => {
       reporterEmail: data.reporterEmail,
       reporterPhone: data.reporterPhone || undefined,
       status: 'pending',
+      image: imageData,
     });
     
     setSubmitted(true);
@@ -172,6 +176,16 @@ const ReportLostPage = () => {
                   </FormItem>
                 )}
               />
+
+              <FormItem>
+                <FormLabel>Photo of Item (optional)</FormLabel>
+                <FormControl>
+                  <ImageUpload value={imageData} onChange={setImageData} />
+                </FormControl>
+                <FormDescription>
+                  Adding a photo helps identify your item more easily
+                </FormDescription>
+              </FormItem>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <FormField
